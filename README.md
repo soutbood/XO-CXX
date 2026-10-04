@@ -4,6 +4,6 @@
 [![Issues](https://img.shields.io/github/issues/soutbood/XO-CXX?style=flat&logo=github&logoColor=white&label=issues&color=red)](https://github.com/soutbood/XO-CXX/issues)
 [![C++](https://img.shields.io/badge/firmware-C%2B%2B-blue)](src/main.cpp)
 [![Cloud](https://img.shields.io/badge/cloud-0%25-brightgreen)](#)
-<h1>Project made with</h1>
+
 [![Abdullah](https://github.com/a-ah7)](https://github.com/a-ah7)
 [![Ahmed](https://github.com/nonamextra0-crypto)](https://github.com/nonamextra0-crypto) 
