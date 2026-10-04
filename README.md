@@ -5,4 +5,4 @@
 [![C++](https://img.shields.io/badge/firmware-C%2B%2B-blue)](src/main.cpp)
 [![Cloud](https://img.shields.io/badge/cloud-0%25-brightgreen)](#)
 
-<h1>Project made with Abdullah (https://github.com/a-ah7) and Ahmed (https://github.com/nonamextra0-crypto) </h1>
+<h1>Project made with [![Abdullah](https://github.com/a-ah7)] and [![Ahmed](https://github.com/nonamextra0-crypto)] </h1>
