@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X O Game</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.3.0/dist/dotlottie-wc.js" type="module"></script>
+    
+</head>
+<body>
+    
+    <div class="container">
+        <!-- العنوان -->
+        <h1 class="main-title">X O Game</h1>
+
+        <!-- الأزرار العلوية -->
+        <div class="top-buttons">
+            
+            <button class="btn btn-blue">New Game</button>
+            <button class="btn btn-blue">Restart</button>
+            <button class="btn btn-red">Resign</button>
+        </div>
+        
+            <div class="create-username-container">
+                <input type="text" id="username" placeholder="create a username..." class="create-box">
+                <button class="create-btn" onclick="createName()">create</button>
+            </div>
+       
+
+        <!-- بورد اللعب والجدول -->
+        <div class="middel">
+            <div class="board">
+                <div id="1" onclick="cell_condition('1')" class="cell"></div>
+                <div id="2" onclick="cell_condition('2')" class="cell"></div>
+                <div id="3" onclick="cell_condition('3')" class="cell"></div>
+                <div id="4" onclick="cell_condition('4')" class="cell"></div>
+                <div id="5" onclick="cell_condition('5')" class="cell"></div>
+                <div id="6" onclick="cell_condition('6')" class="cell"></div>
+                <div id="7" onclick="cell_condition('7')" class="cell"></div>
+                <div id="8" onclick="cell_condition('8')" class="cell"></div>
+                <div id="9" onclick="cell_condition('9')" class="cell"></div>
+            </div>
+                <!--  واجهة طلب الانظمام -->
+    <div id="joinRequestModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 class="modalTitle" id="joinRequestTitle">Join Request</h3>
+            <p id="joinRequestMessage">Player <span id="requestUsername">username</span> wants to join your game.</p>
+            <div class="modal-actions">
+                <button class="btn-again" id="acceptBtn" onclick="accept()">Accept</button>
+                <button class="btn-close" id="declineBtn" onclick="reject()">Decline</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--  واجهة الفوز -->
+
+    <div id="modalOverlay" class="modal-overlay">
+    
+        <div class="modal-card">
+          <h3 class="modalTitle1" id="win-h3"> You Won!</h3>
+          <p id="modalMessage">Great job! Nice performance.</p>
+          
+          <div class="modal-actions">
+              <button class="btn-again" id="playAgainBtn" onclick="hideModals()">Play Again</button>
+            <button class="btn-close" id="closeModalBtn" onclick="hideModals()">Close</button>
+          </div>
+        </div>
+    </div>
+
+    <!-- واجهة الخسارة -->
+    <div id="modalOverlay" class="modal-overlay">
+    
+        <div class="modal-card">
+        <h3 class="modalTitle1" id="lose-h3"> You Lost!</h3>
+        <p id="modalMessage">Hard luck! Try again.</p>
+        
+            <div class="modal-actions">
+                <button class="btn-again" id="playAgainBtn" onclick="hideModals()">Play Again</button  >
+                <button class="btn-close" id="closeModalBtn" onclick="hideModals()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- واجهه التعادل -->
+    <div class="modal-overlay" id="modalOverlay">
+
+        <div class="modal-card">
+            <h3 class="modalTitle1" id="draw-h3">Draw!</h3>
+            <p id="modalMessage">It was a good match!</p>
+            <div class="modal-actions">
+                <button class="btn-again" id="playAgainBtn" onclick="hideModals()">Play Again</button>
+                <button class="btn-close" id="closeModalBtn" onclick="hideModals()">Close</button>
+            </div>
+        </div>
+    </div>
+
+             <!-- قائمة الأصدقاء  -->
+        <div id="find-friends" class="online-players">
+            <h3>Find Friends</h3>
+            
+            <!-- حقل البحث -->
+             <div class="search-container">
+                <input type="text" placeholder="Search username..." class="search-box">
+                <button class="search-btn">Search</button>
+              </div>
+            <div class="players-list">
+            </div>
+        </div>
+        <!-- واجهة انتظار قبول الدعوة -->
+    <div class="modal-overlay" id="modalOverlay-4">
+
+        <div class="animation-card">
+            <dotlottie-wc src="/animation.json" autoplay loop class="vanilla-animation"></dotlottie-wc>
+            <p id="modalMessage">waiting for accept</p>
+        </div>
+    </div>
+
+    <input type="text" id="message" placeholder="Type a message">
+    <button onclick="sendrequest()">Send</button>
+
+    <script src="/script.js"></script>
+</body>
+</html>
