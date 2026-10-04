@@ -1,0 +1,6 @@
+[![Stars](https://img.shields.io/github/stars/soutbood/XO-CXX?style=flat&logo=github&logoColor=white&label=stars&color=blue)](https://github.com/soutbood/XO-CXX)
+[![Forks](https://img.shields.io/github/forks/soutbood/XO-CXX?style=flat&logo=github&logoColor=white&label=forks&color=teal)](https://github.com/soutbood/XO-CXX)
+[![Watchers](https://img.shields.io/github/watchers/soutbood/XO-CXX?style=flat&logo=github&logoColor=white&label=watchers&color=orange)](https://github.com/soutbood/XO-CXX)
+[![Issues](https://img.shields.io/github/issues/soutbood/XO-CXX?style=flat&logo=github&logoColor=white&label=issues&color=red)](https://github.com/soutbood/XO-CXX/issues)
+[![C++](https://img.shields.io/badge/firmware-C%2B%2B-blue)](src/esp32.ino)
+[![Cloud](https://img.shields.io/badge/cloud-0%25-brightgreen)](#)
