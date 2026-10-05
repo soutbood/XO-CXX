@@ -8,3 +8,9 @@
 [![C++](https://img.shields.io/badge/firmware-C%2B%2B-blue)](src/main.cpp)
 [![Cloud](https://img.shields.io/badge/cloud-0%25-brightgreen)](#)
 <br/>PROJECT MADE WITH [Abdullah](https://github.com/a-ah7) AND [Ahmed](https://github.com/nonamextra0-crypto) 
+
+FIXING ISSUES:
+<br>
+1-STACKOVERFLOW WHEN REQUESTING TO SOMEONE AFTER THEY PLAYED WITH YOU - ❌
+<br>
+2-TESTING THE LIMIT OF ACTIVE CONNECTION UNDER NORMAL VS HIGH LOAD- ❌
