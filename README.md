@@ -1,4 +1,4 @@
-<h2>An ESP32 project based on a simple multiplayer XO game hosted on the ESP32 and have it's own webpage in the File system no cloud or internet connection needed just a wifi access point for the esp32 to connect to and the game is in esp32.local 
+<h2>An ESP32 project based on a simple multiplayer XO game hosted on the ESP32 and has it's own webpage in the File system, no cloud or internet connection needed just a wifi access point for the esp32 to connect to and the game is in esp32.local 
 </h2>
 
 [![Stars](https://img.shields.io/github/stars/soutbood/XO-CXX?style=flat&logo=github&logoColor=white&label=stars&color=blue)](https://github.com/soutbood/XO-CXX)
