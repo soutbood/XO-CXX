@@ -14,6 +14,4 @@ FIXING ISSUES:
 <br>
 1-STACKOVERFLOW WHEN REQUESTING TO SOMEONE AFTER THEY PLAYED WITH YOU - ❌
 <br>
-(Working on esp32-s2 without need to use psram but stackoverflow on esp32-c3 with same stack size 32kb)
-<br>
 2-TESTING THE LIMIT OF ACTIVE CONNECTION UNDER NORMAL VS HIGH LOAD- ❌
