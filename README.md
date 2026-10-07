@@ -12,15 +12,6 @@
 
 FIXING ISSUES:
 <br>
-1-STACKOVERFLOW WHEN REQUESTING TO SOMEONE AFTER THEY PLAYED WITH YOU - ❌
-<br>
-{
-ESP32-s2 mini on arduino-ide with 2mb psram and usage of 20kb after wifi connection it and 80 kb free ram the game is working and no stackoverflow occurs on 16kb stack 
-<br>
-ESP32-s2 mini on pio with 2mb psram and usage of 20kb after wifi connection it and 100 kb free ram the game isn't working 
-<br>
-ESP32-c3 mini on pio with 0 psram and 200kb free ram and the stack is overflowing
-<br>
-}
+1-STACKOVERFLOW WHEN REQUESTING TO SOMEONE AFTER THEY PLAYED WITH YOU - ✅
 <br>
 2-TESTING THE LIMIT OF ACTIVE CONNECTION UNDER NORMAL VS HIGH LOAD- ❌
