@@ -17,6 +17,8 @@ const char *password = "";
 AsyncWebServer server(80);
 AsyncWebSocket ws("/ws");
 
+SET_LOOP_TASK_STACK_SIZE( 32*1024 ); // 32KB
+
 class Player {
 public:
   bool p_state;         // connected or not
@@ -35,6 +37,7 @@ public:
     p_limit = 0;
     p_stack_id = -1;
   }
+  ~Player(){}
   void set_p_state(bool state);
   void to_json(JsonVariant doc);
   void print_p_debuging();
@@ -45,6 +48,7 @@ public:
   void set_p_limit(int limit);
   void set_p_name(String name);
   bool is_alive();
+  void p_transfer(int client_id);
   int get_p_client_id();
   int get_p_stack_id();
   int get_p_game_id();
@@ -62,37 +66,31 @@ public:
   int g_cell;         // from 1 to 9 when used do g_cell-1
   int g_play;
   char board[9];
+  int g_game_id;
 
-  Player *g_player;    // g_player is the one who send the request
-  Player *g_oppenent;  // g_oppenent is the oppenent
+  Player g_player;    // g_player is the one who send the request
+  Player g_oppenent;  // g_oppenent is the oppenent
 
-  Game(Player &player, Player &oppenent) {
-    for (int i = 0; i < 9; i++)
-      board[i] = '-';
-    move = 0;
-    current_player = true;
-    g_oppenent = &oppenent;
-    g_player = &player;
-    g_color = -1;
-    g_cell = -1;
-    g_play = 1;
-  }
   Game() {
     for (int i = 0; i < 9; i++)
       board[i] = '-';
     move = 0;
     current_player = true;
+    g_oppenent = Player();
+    g_player = Player();
     g_color = -1;
     g_cell = -1;
     g_play = 1;
+    g_game_id = -1;
   }
+  ~Game(){}
   void print_debug();
   void print_board();
   void change_turn();
   void input_user();
   char is_winning();
   void print_received();
-  void game_init(JsonDocument doc, Player &player, Player &oppenent);
+  void game_init(JsonDocument doc, int player_id, int oppenent_id);
   void game_init(JsonDocument doc);
   void game_loop();
   void set_play(int x);
@@ -109,7 +107,7 @@ public:
   int get_move();
   String get_oppenent_ip();
   String get_player_ip();
-  void game_reset(Player &player, Player &oppenent);
+
 };
 
 const int capacity = 50;
@@ -146,7 +144,7 @@ void connection_print(){
 void stack_print(){
     for(int i=0;i<capacity;i++)
         Serial.print(String(stack[i]) + ",");
-        Serial.println();
+  Serial.println();
 }
 
 void stack_push(int &exit, int id){
@@ -194,7 +192,7 @@ void current_alive(AsyncWebSocket *server){
 
 void d_init(){
 for (int i = 0 ; i < 20 ; i++)
-    game[i] = Game(d_player, d_oppenent);
+    game[i] = Game();
 }
 
 
@@ -242,7 +240,7 @@ void wsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
     case WS_EVT_DISCONNECT:                                       // if a client is disconnected, then type == WStype_DISCONNECTED
       Serial.println("Client (" + String(client->id()) + ") disconnected");
       stack_print();
-      ip[client_id].set_p_state(false);
+      ip[client_id] = Player();
       connection_print();
       Serial.println(String(connection[client_id])+ " : " + String(client->id()));
       stack_push(client_id,client->id());                   //stack location that was taken ,client id
@@ -294,15 +292,11 @@ void wsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
           int a = (ip[num].get_p_game_id() == -1 ? -1 : ip[num].get_p_game_id());
 
           if (a == -1) {
-            a = m_game_id;
+            a = m_game_id % 20;
             m_game_id++;
             ip[num].set_p_game_id(a);
           }
 
-          if (doc["rst"] == 125) {
-            game[a].game_reset(ip[game[a].get_player_client_id()],ip[game[a].get_oppenent_client_id()]);
-            return;
-          }
           if (doc["name"])
             if(doc["ip"] == ip[num].get_p_ip()){
               String name = doc["name"];
@@ -351,8 +345,8 @@ void wsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
               ip[player_id].set_p_game_id(a);             // set the game id to the player
               ip[oppenent_id].set_p_client_id(connection[oppenent_id]);      // set own id to the oppenent
               ip[player_id].set_p_client_id(connection[player_id]);          // set own id to the player
+              game[a].game_init(doc,player_id,oppenent_id);
               game[a].set_game_id(a);
-              game[a].game_init(doc,ip[player_id],ip[oppenent_id]);
 
               Serial.println("game ID " + String(a));
 
@@ -432,9 +426,10 @@ void wsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
           server->text(game[a].get_oppenent_client_id(), jsonString);
           Serial.println("sent to oppenent");
           if (game[a].is_winning() == 'X'
-              or game[a].is_winning() == 'O'
-              or game[a].is_winning() == 'D')
-            game[a].game_reset(ip[game[a].get_player_client_id()],ip[game[a].get_oppenent_client_id()]);
+            or game[a].is_winning() == 'O'
+            or game[a].is_winning() == 'D')
+            game[a] = Game();
+            
         }
 
         Serial.println("");
@@ -473,6 +468,7 @@ void setup() {
   Serial.println();
   Serial.print(sizeof(Game));
   Serial.println();
+  Serial.printf("\nLoop() - Free Stack Space: %d\n", uxTaskGetStackHighWaterMark(NULL));
   Serial.printf("Free Heap: %d KB\n", ESP.getFreeHeap() / 1024);
 
 
@@ -591,9 +587,9 @@ char Game::is_winning() {
   return 'C';
 }
 
-void Game::game_init(JsonDocument doc, Player &player, Player &oppenent) {
-  g_oppenent = &oppenent;
-  g_player   = &player;
+void Game::game_init(JsonDocument doc, int player_id, int oppenent_id) {
+  g_oppenent.p_transfer(oppenent_id);
+  g_player.p_transfer(player_id);
   g_color    = doc["turn"];
   g_cell     = doc["cell"];
 }
@@ -618,11 +614,11 @@ int Game::get_cell() {
 }
 
 int Game::get_oppenent_client_id() {
-  return g_oppenent->p_client_id;
+  return g_oppenent.p_client_id;
 }
 
 int Game::get_player_client_id() {
-  return g_player->p_client_id;
+  return g_player.p_client_id;
 }
 
 int Game::get_color() {
@@ -630,11 +626,11 @@ int Game::get_color() {
 }
 
 String Game::get_oppenent_ip(){
-  return g_oppenent->p_ip;
+  return g_oppenent.p_ip;
 }
  
 String Game::get_player_ip(){
-  return g_player->p_ip;
+  return g_player.p_ip;
 }
 
 void Game::set_color(int id) {
@@ -650,25 +646,28 @@ void Game::set_play(int x) {
 }
 
 void Game::set_player(int id) {
-  g_player->p_client_id = id;
-  g_player->p_ip = ip[id].get_p_ip();
+  g_player.p_client_id = id;
+  g_player.p_ip = ip[id].get_p_ip();
+  g_player.p_game_id = g_game_id;
 }
 
 void Game::set_oppenent(int id) {
-  g_oppenent->p_client_id = id;
-  g_oppenent->p_ip = ip[id].get_p_ip();
+  g_oppenent.p_client_id = id;
+  g_oppenent.p_ip = ip[id].get_p_ip();
+  g_oppenent.p_game_id = g_game_id;
 }
 
 void Game::set_game_id(int game_id){
-  g_oppenent->p_game_id = game_id;
-  g_player->p_game_id = game_id;
+  g_oppenent.p_game_id = game_id;
+  g_player.p_game_id = game_id;
+  g_game_id = game_id;
 }
 
 void Game::print_debug(){
   Serial.println("Player ");
-  g_player->print_p_debuging();    // g_player is the one who send the request
+  g_player.print_p_debuging();    // g_player is the one who send the request
   Serial.println("Oppenent ");
-  g_oppenent->print_p_debuging();  // g_oppenent is the oppenent
+  g_oppenent.print_p_debuging();  // g_oppenent is the oppenent
 
 }
 
@@ -688,17 +687,6 @@ void Game::game_loop() {
   }
 }
 
-void Game::game_reset(Player &player, Player &oppenent) {
-  for (int i = 0; i < 9; i++)
-    board[i] = '-';
-  move = 0;
-  current_player = true;
-  g_player = &player;
-  g_oppenent = &oppenent;
-  g_color = -1;
-  g_cell = -1;
-  g_play = 1;
-}
 
 int Game::get_move() {
   return move;
@@ -781,4 +769,14 @@ void Player::p_reset(){
   p_client_id = -1;
   p_game_id = -1;
   p_limit = 0;
+  p_stack_id = -1;
+}
+void Player::p_transfer(int client_id){
+  p_state = ip[client_id].is_alive();
+  p_ip = ip[client_id].get_p_ip();
+  p_name = ip[client_id].get_p_name();
+  p_client_id = ip[client_id].get_p_client_id();
+  p_game_id = ip[client_id].get_p_game_id();
+  p_limit = 0;
+  p_stack_id = ip[client_id].get_p_stack_id(); 
 }
