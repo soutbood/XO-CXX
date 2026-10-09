@@ -3,6 +3,7 @@ let x;
 let player_id = -1;
 let player_ip = -1;
 let oppenent_id = -1;
+let oppenent_ip = -1;
 let cond = 1;
 let very = 0;
 let m_very = 0;
@@ -17,16 +18,18 @@ function accept(){
 
 function reject(){
     hideModals();
+    oppenent_ip = -1;
     Socket.send(JSON.stringify({'player':oppenent_id,'very':m_very,'decision':121}));
 }
 
-function sendrequest(){
-  var message = document.getElementById("message").value;
-  request(message);
+function playAgain(){
+    hideModals();
+    request(oppenent_ip);
 }
 
 function request(info){
   very = Math.floor(Math.random()*100+1);
+  oppenent_ip = info;
   Socket.send(JSON.stringify({'request':info,'very':very}));
   showModal('#modalOverlay-4');
   console.log(very);
@@ -105,6 +108,7 @@ function processCommand(event){
   }
   if(obj.request){
     oppenent_id = obj.request; // the id of the player wanting to play aka oppenent of the person recieving 
+    oppenent_ip = obj.requester_ip;
     m_very = obj.very;
     showModal('#joinRequestTitle');  // show the request modal to oppenent to play 
     return;
@@ -115,6 +119,12 @@ function processCommand(event){
   }
   if(obj.decision > 0){
     hideModals();
+    
+    if(obj.oppenent_ip == player_ip){}
+    else{
+      oppenent_ip = obj.oppenent_ip;
+    }
+    
     if(obj.id = player_id){}
     else{
       alert("game accepted Start");
