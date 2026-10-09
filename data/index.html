@@ -64,7 +64,7 @@
           <p id="modalMessage">Great job! Nice performance.</p>
           
           <div class="modal-actions">
-              <button class="btn-again" id="playAgainBtn" onclick="hideModals()">Play Again</button>
+              <button class="btn-again" id="playAgainBtn" onclick="playAgain()">Play Again</button>
             <button class="btn-close" id="closeModalBtn" onclick="hideModals()">Close</button>
           </div>
         </div>
@@ -78,7 +78,7 @@
         <p id="modalMessage">Hard luck! Try again.</p>
         
             <div class="modal-actions">
-                <button class="btn-again" id="playAgainBtn" onclick="hideModals()">Play Again</button  >
+                <button class="btn-again" id="playAgainBtn" onclick="playAgain()">Play Again</button  >
                 <button class="btn-close" id="closeModalBtn" onclick="hideModals()">Close</button>
             </div>
         </div>
@@ -91,7 +91,7 @@
             <h3 class="modalTitle1" id="draw-h3">Draw!</h3>
             <p id="modalMessage">It was a good match!</p>
             <div class="modal-actions">
-                <button class="btn-again" id="playAgainBtn" onclick="hideModals()">Play Again</button>
+                <button class="btn-again" id="playAgainBtn" onclick="playAgain()">Play Again</button>
                 <button class="btn-close" id="closeModalBtn" onclick="hideModals()">Close</button>
             </div>
         </div>
@@ -117,9 +117,6 @@
             <p id="modalMessage">waiting for accept</p>
         </div>
     </div>
-
-    <input type="text" id="message" placeholder="Type a message">
-    <button onclick="sendrequest()">Send</button>
 
     <script src="/script.js"></script>
 </body>
