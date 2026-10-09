@@ -324,6 +324,7 @@ void wsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
                   JsonObject ob = d.to<JsonObject>(); //create json to send
                   
                   ob["request"]=num;        //send id of player requesting the game
+                  ob["requester_ip"] = ip[num].get_p_ip();
                   ob["very"] =doc["very"];  //send the confirmation that this person is the one sending the game
                   ob["not_list"] = 1;
                   serializeJson(d, json);
@@ -364,6 +365,7 @@ void wsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
               // the json to send to the person requesting the game
               obj_accept["oppenent"] = connection[oppenent_id];               // send oppenent id
               obj_accept["id"] = connection[player_id];                       // send player id
+              obj_accept["oppenent_ip"] = ip[oppenent_id].get_p_ip();         // send oppenent ip for playAgain
               obj_accept["cond"] = 0;                             // send differentiate between player and oppenent in the website
               obj_accept["game"] = a;                             // send game id
               obj_accept["very"] = doc["very"];                   // send the confirmation to know how is the one that send the game so that cond works 
