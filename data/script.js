@@ -195,7 +195,14 @@ window.onload = function(event){
 }
 
 // --- Game Status and Players' Data ---
-// const onlinePlayers = [{'name':'ahmed','id':10,'ip':'192.168.0.193'},{'name':'ali','id':11,'ip':'192.168.0.193'}];
+/* const onlinePlayers = [
+    {'name':'abc','user_id':10,'ip':'192.168.0.193'},
+    {'name':'abd','user_id':11,'ip':'192.168.0.193'},
+    {'name':'abe','user_id':12,'ip':'192.168.0.193'},
+    {'name':'bcd','user_id':13,'ip':'192.168.0.193'},
+    {'name':'bce','user_id':14,'ip':'192.168.0.193'},
+    {'name':'cde','user_id':15,'ip':'192.168.0.193'}];
+*/
 const onlineNames = [];
 // --- For Testing ---
 
@@ -203,7 +210,8 @@ function cardShow(players) {
     const playersContainer = document.querySelector('.players-list');
     if (!playersContainer) return;
     if (!players) return;
-    if(players.not_list) return;
+    //checks if the json sent a player-list or not 
+    if (players.not_list) return;
     playersContainer.innerHTML = "";
 
     const data = (typeof players === 'string') ? JSON.parse(players) : players;
@@ -216,7 +224,10 @@ function cardShow(players) {
       }
       else{
         if(player.name){
-          onlineNames.push((player.name).toString()); 
+          const item = [];
+          item.push((player.name).toString());
+          item.push((player.user_id).toString());
+          onlineNames.push(item); 
           playersContainer.innerHTML += `
           <div class="player-item" data-id="${player.user_id}">
           <span>Name : <b>"${player.name}"</b></span>
@@ -224,9 +235,13 @@ function cardShow(players) {
           <button class="play-btn" onclick="request('${player.ip}')">Play</button>
           </div>
           `;
+          console.log(item.toString());
         }
       else{
-          onlineNames.push("Player " + (player.user_id).toString()); 
+          const item = [];
+          item.push("Player " + (player.user_id).toString());
+          item.push((player.user_id).toString());
+          onlineNames.push(item); 
           playersContainer.innerHTML += `
           <div class="player-item" data-id="${player.user_id}">
           <span>Name : <b>"Player ${player.user_id}"</b></span>
@@ -234,7 +249,9 @@ function cardShow(players) {
           <button class="play-btn" onclick="request('${player.ip}')">Play</button>
           </div>
           `;
+          console.log(item.toString());
         }
+      console.log(onlineNames.toString());
     }
     });
     console.log(onlineNames.toString());
