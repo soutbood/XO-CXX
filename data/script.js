@@ -205,6 +205,13 @@ window.onload = function(event){
 */
 const onlineNames = [];
 // --- For Testing ---
+const onlinePlayers = [
+    {'abc',10},
+    {'abd',11},
+    {'abe',12},
+    {'bcd',13},
+    {'bce',14},
+    {'cde',15}];
 
 function cardShow(players) {
     const playersContainer = document.querySelector('.players-list');
