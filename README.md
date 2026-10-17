@@ -15,3 +15,16 @@ FIXING ISSUES:
 1-STACKOVERFLOW WHEN REQUESTING TO SOMEONE AFTER THEY PLAYED WITH YOU - ✅
 <br>
 2-TESTING THE LIMIT OF ACTIVE CONNECTION UNDER NORMAL VS HIGH LOAD- ❌
+
+
+<h1>HOW TO USE</h1>
+run the commands
+
+`pio run --target upload`
+`pio run --target uploadfs`
+
+while the esp32 is attached to the pc
+then press the reset button and run
+
+`pio device monitor`
+the esp32's output should show up.
