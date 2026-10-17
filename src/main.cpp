@@ -486,7 +486,7 @@ void setup() {
     request->send(LittleFS, "/style.css" ,"text/css");
   });
   server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request) {
-    request->send(LittleFS, "/script.js", "applicat/ion/javascript");
+    request->send(LittleFS, "/script.js", "application/javascript");
   });
   server.on("/back.jpg", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(LittleFS, "/back.jpg", "image/jpg");
