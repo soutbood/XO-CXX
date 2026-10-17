@@ -12,19 +12,19 @@ var Socket;
 
 
 function accept(){
-    hideModals();
-    Socket.send(JSON.stringify({'player':oppenent_id,'very':m_very,'decision':122}));
+  hideModals();
+  Socket.send(JSON.stringify({'player':oppenent_id,'very':m_very,'decision':122}));
 }
 
 function reject(){
-    hideModals();
-    oppenent_ip = -1;
-    Socket.send(JSON.stringify({'player':oppenent_id,'very':m_very,'decision':121}));
+  hideModals();
+  oppenent_ip = -1;
+  Socket.send(JSON.stringify({'player':oppenent_id,'very':m_very,'decision':121}));
 }
 
 function playAgain(){
-    hideModals();
-    request(oppenent_ip);
+  hideModals();
+  request(oppenent_ip);
 }
 
 function request(info){
@@ -49,7 +49,7 @@ function createName(){
 
 function cell_condition(cell_web){
   if(turn%2==cond){
-    Socket.send(JSON.stringify({'player':player_id,'oppenent':oppenent_id,'game':game_id,'turn':turn,'cell':cell_web}));  
+    Socket.send(JSON.stringify({'player':player_id,'oppenent':oppenent_id,'game':game_id,'turn':turn,'cell':cell_web}));
   }
 }
 
@@ -107,10 +107,10 @@ function processCommand(event){
     console.log(obj.very);
   }
   if(obj.request){
-    oppenent_id = obj.request; // the id of the player wanting to play aka oppenent of the person recieving 
+    oppenent_id = obj.request; // the id of the player wanting to play aka oppenent of the person recieving
     oppenent_ip = obj.requester_ip;
     m_very = obj.very;
-    showModal('#joinRequestTitle');  // show the request modal to oppenent to play 
+    showModal('#joinRequestTitle');  // show the request modal to oppenent to play
     return;
   }
   if(obj.decision < 0){
@@ -119,12 +119,12 @@ function processCommand(event){
   }
   if(obj.decision > 0){
     hideModals();
-    
+
     if(obj.oppenent_ip == player_ip){}
     else{
       oppenent_ip = obj.oppenent_ip;
     }
-    
+
     if(obj.id = player_id){}
     else{
       alert("game accepted Start");
@@ -134,7 +134,7 @@ function processCommand(event){
   if(obj.init){
     player_id = obj.id;
     player_ip = obj.ip;
-    
+
   }
   if(obj.game){
     hideModals();
@@ -146,9 +146,9 @@ function processCommand(event){
     oppenent_id = obj.oppenent;
     cond=0;
     if(very==obj.very){
-    player_id   = obj.oppenent;
-    oppenent_id = obj.id;
-    cond=1;
+      player_id   = obj.oppenent;
+      oppenent_id = obj.id;
+      cond=1;
     }
   }
   if(obj.eror)
@@ -187,7 +187,7 @@ function processCommand(event){
       showModal('#lose-h3');
     }
     reset();
-  }  
+  }
 }
 
 window.onload = function(event){
@@ -196,72 +196,73 @@ window.onload = function(event){
 
 // --- Game Status and Players' Data ---
 /* const onlinePlayers = [
-    {'name':'abc','user_id':10,'ip':'192.168.0.193'},
-    {'name':'abd','user_id':11,'ip':'192.168.0.193'},
-    {'name':'abe','user_id':12,'ip':'192.168.0.193'},
-    {'name':'bcd','user_id':13,'ip':'192.168.0.193'},
-    {'name':'bce','user_id':14,'ip':'192.168.0.193'},
-    {'name':'cde','user_id':15,'ip':'192.168.0.193'}];
-*/
-const onlineNames = [];
+ *    {'name':'abc','user_id':10,'ip':'192.168.0.193'},
+ *    {'name':'abd','user_id':11,'ip':'192.168.0.193'},
+ *    {'name':'abe','user_id':12,'ip':'192.168.0.193'},
+ *    {'name':'bcd','user_id':13,'ip':'192.168.0.193'},
+ *    {'name':'bce','user_id':14,'ip':'192.168.0.193'},
+ *    {'name':'cde','user_id':15,'ip':'192.168.0.193'}];
+ * const onlinePlayers = [
+ *    {'abc',10},
+ *    {'abd',11},
+ *    {'abe',12},
+ *    {'bcd',13},
+ *    {'bce',14},
+ *    {'cde',15}];
+ */
 // --- For Testing ---
-const onlinePlayers = [
-    {'abc',10},
-    {'abd',11},
-    {'abe',12},
-    {'bcd',13},
-    {'bce',14},
-    {'cde',15}];
+
+const onlineNames = [];
 
 function cardShow(players) {
-    const playersContainer = document.querySelector('.players-list');
-    if (!playersContainer) return;
-    if (!players) return;
-    //checks if the json sent a player-list or not 
-    if (players.not_list) return;
-    playersContainer.innerHTML = "";
+  const playersContainer = document.querySelector('.players-list');
+  if (!playersContainer) return;
+  if (!players) return;
+  //checks if the json sent a player-list or not
+  if (players.not_list) return;
+  playersContainer.innerHTML = "";
 
-    const data = (typeof players === 'string') ? JSON.parse(players) : players;
-    while(onlineNames.length > 0) {
-        onlineNames.pop();
+  const data = (typeof players === 'string') ? JSON.parse(players) : players;
+  while(onlineNames.length > 0) {
+    onlineNames.pop();
+  }
+  data.forEach(player => {
+    if(player.ip == player_ip){
+      console.log(player_ip);
     }
-    data.forEach(player => {
-      if(player.ip == player_ip){ 
-        console.log(player_ip);
+    else{
+      if(player.name){
+        const item = [];
+        item.push((player.name).toString());
+        item.push((player.user_id).toString());
+        onlineNames.push(item);
+        playersContainer.innerHTML += `
+        <div class="player-item" data-id="${player.user_id}">
+        <span>Name : <b>"${player.name}"</b></span>
+        <span>ID : <b>(${player.client_id})</b></span>
+        <button class="play-btn" onclick="request('${player.ip}')">Play</button>
+        </div>
+        `;
+        console.log(item.toString());
       }
       else{
-        if(player.name){
-          const item = [];
-          item.push((player.name).toString());
-          item.push((player.user_id).toString());
-          onlineNames.push(item); 
-          playersContainer.innerHTML += `
-          <div class="player-item" data-id="${player.user_id}">
-          <span>Name : <b>"${player.name}"</b></span>
-          <span>ID : <b>(${player.client_id})</b></span>
-          <button class="play-btn" onclick="request('${player.ip}')">Play</button>
-          </div>
-          `;
-          console.log(item.toString());
-        }
-      else{
-          const item = [];
-          item.push("Player " + (player.user_id).toString());
-          item.push((player.user_id).toString());
-          onlineNames.push(item); 
-          playersContainer.innerHTML += `
-          <div class="player-item" data-id="${player.user_id}">
-          <span>Name : <b>"Player ${player.user_id}"</b></span>
-          <span>ID : <b>(${player.client_id})</b></span>
-          <button class="play-btn" onclick="request('${player.ip}')">Play</button>
-          </div>
-          `;
-          console.log(item.toString());
-        }
+        const item = [];
+        item.push("Player " + (player.user_id).toString());
+        item.push((player.user_id).toString());
+        onlineNames.push(item);
+        playersContainer.innerHTML += `
+        <div class="player-item" data-id="${player.user_id}">
+        <span>Name : <b>"Player ${player.user_id}"</b></span>
+        <span>ID : <b>(${player.client_id})</b></span>
+        <button class="play-btn" onclick="request('${player.ip}')">Play</button>
+        </div>
+        `;
+        console.log(item.toString());
+      }
       console.log(onlineNames.toString());
     }
-    });
-    console.log(onlineNames.toString());
+  });
+  console.log(onlineNames.toString());
 }
 
 
@@ -271,27 +272,66 @@ let currentTurn = "X";
 // --- DOM References ---
 const playersContainer = document.querySelector('.players-list');
 if (playersContainer) {
-    playersContainer.innerHTML = "";
+  playersContainer.innerHTML = "";
 }
 
 const modals = document.querySelectorAll('.modal-overlay');
 
 // --- Modal Helper Functions ---
 function hideModals() {
-    modals.forEach(modal => {
-        modal.style.display = 'none';
-    });
+  modals.forEach(modal => {
+    modal.style.display = 'none';
+  });
 }
 
 function showModal(selector) {
-    hideModals();
-    // Searches through all modals to find the one containing the unique header ID
-    modals.forEach(modal => {
-        if (modal.matches(selector) || modal.querySelector(selector)) {
-            modal.style.display = 'flex';
-        }
-    });
+  hideModals();
+  // Searches through all modals to find the one containing the unique header ID
+  modals.forEach(modal => {
+    if (modal.matches(selector) || modal.querySelector(selector)) {
+      modal.style.display = 'flex';
+    }
+  });
 }
 
 // Hide all modals immediately on load
 hideModals();
+
+
+
+function searchUsers() {
+  const searchBox = document.querySelector('.search-container .search-box');
+  if (!searchBox) return;
+  const query = searchBox.value.toLowerCase().trim();
+  const items = document.querySelectorAll('.players-list .player-item');
+  items.forEach(item => {
+    if (query === '') {
+      item.style.display = '';
+      return;
+    }
+    const text = item.textContent.toLowerCase();
+    if (text.includes(query)) {
+      item.style.display = '';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+
+function wireSearch() {
+  const searchBox = document.querySelector('.search-container .search-box');
+  const searchBtn = document.querySelector('.search-container .search-btn');
+  if (searchBox && searchBtn && !searchBox.dataset.searchWired) {
+    searchBox.dataset.searchWired = '1';
+    searchBtn.addEventListener('click', searchUsers);
+    searchBox.addEventListener('keyup', function (e) {
+      if (e.key === 'Enter') searchUsers();
+    });
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', wireSearch);
+} else {
+  wireSearch();
+}

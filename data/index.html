@@ -5,27 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X O Game</title>
     <link rel="stylesheet" href="/style.css">
-    
+
 </head>
 <body>
-    
+
     <div class="container">
         <!-- العنوان -->
         <h1 class="main-title">X O Game</h1>
 
         <!-- الأزرار العلوية -->
         <div class="top-buttons">
-            
+
             <button class="btn btn-blue">New Game</button>
             <button class="btn btn-blue">Restart</button>
             <button class="btn btn-red">Resign</button>
         </div>
-        
+
             <div class="create-username-container">
                 <input type="text" id="username" placeholder="create a username..." class="create-box">
                 <button class="create-btn" onclick="createName()">create</button>
             </div>
-       
+
 
         <!-- بورد اللعب والجدول -->
         <div class="middel">
@@ -57,11 +57,11 @@
     <!--  واجهة الفوز -->
 
     <div id="modalOverlay" class="modal-overlay">
-    
+
         <div class="modal-card">
           <h3 class="modalTitle1" id="win-h3"> You Won!</h3>
           <p id="modalMessage">Great job! Nice performance.</p>
-          
+
           <div class="modal-actions">
               <button class="btn-again" id="playAgainBtn" onclick="playAgain()">Play Again</button>
             <button class="btn-close" id="closeModalBtn" onclick="hideModals()">Close</button>
@@ -71,11 +71,11 @@
 
     <!-- واجهة الخسارة -->
     <div id="modalOverlay" class="modal-overlay">
-    
+
         <div class="modal-card">
         <h3 class="modalTitle1" id="lose-h3"> You Lost!</h3>
         <p id="modalMessage">Hard luck! Try again.</p>
-        
+
             <div class="modal-actions">
                 <button class="btn-again" id="playAgainBtn" onclick="playAgain()">Play Again</button  >
                 <button class="btn-close" id="closeModalBtn" onclick="hideModals()">Close</button>
@@ -99,11 +99,11 @@
              <!-- قائمة الأصدقاء  -->
         <div id="find-friends" class="online-players">
             <h3>Find Friends</h3>
-            
+
             <!-- حقل البحث -->
              <div class="search-container">
-                <input type="text" placeholder="Search username..." class="search-box">
-                <button class="search-btn">Search</button>
+                <input type="text" id="searchInput" placeholder="Search username..." class="search-box">
+                <button class="search-btn" onclick="searchUsers()">Search</button>
               </div>
             <div class="players-list">
             </div>
@@ -112,13 +112,13 @@
     <div class="modal-overlay" id="modalOverlay-4">
 
         <div class="animation-card">
-            <dotlottie-wc src="animation.json" autoplay loop class="vanilla-animation"></dotlottie-wc>
+            <dotlottie-wc src="/animation.json" autoplay loop class="vanilla-animation"></dotlottie-wc>
 
-    
+
             <p id="modalMessage">waiting for accept</p>
         </div>
     </div>
-    <script src="dotlottie-wc.js" type="module"></script>
+    <script src="/dotlottie-wc.js" type="module"></script>
     <script src="/script.js"></script>
 </body>
 </html>
