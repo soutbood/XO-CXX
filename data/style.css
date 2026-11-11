@@ -5,7 +5,7 @@
     font-family: Arial, sans-serif;
 }
 body {
-    background-image: url('/back.jpg');   /*ai*/
+    background-image: url('back.jpg');   /*ai*/
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;    /*ai*/
@@ -380,14 +380,15 @@ h1 {
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); 
     border-radius: 16px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* ظل يعطي عمقاً للنافذة */
-    gap: 15px;        
-    width: 330px;                     
+    gap: 15px;      
+    width: 300px;  
+    height: 300px;                   
     text-align: center;
 }
 /* تنسيق الانميشن */
 .vanilla-animation {
-    width: 150px;   
-    height: 150px;
+    width: 256px;   
+    height: 256px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -397,8 +398,8 @@ h1 {
 /* تنسيق نص الانتظار */
 #modalMessage {
     color: #ffffff;
-    font-size: 18px;
+    font-size: 24px;
     font-weight: 500;
     text-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
-    margin: 0;
+    margin: -50px 0 0 0; /* تعديل المسافة العلوية */
 }
