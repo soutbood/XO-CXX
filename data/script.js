@@ -212,7 +212,34 @@ window.onload = function(event){
  */
 // --- For Testing ---
 
-const onlineNames = [];
+const onlineItems = [];
+
+function add_item(name, user_id, client_id, ip, score, me){
+  for(let i = 0; i < 10 ; i++){
+  onlineItems[i] = {
+    id : user_id,
+    name : name,
+    client_id : client_id,
+    ip : ip,
+    score : score,
+    is_me : me
+    };
+  }
+  onlineItems.sort((a,b)=> b.score-a.score);
+}
+
+function showCard(){
+  for(let i = 0 ; i < onlineItems.length ; i++){
+    playersContainer.innerHTML += `
+    <div class="player-item" data-id="${onlineItems[i].user_id}">
+    <span>Name : <b>"Player ${onlineItems[i].user_id}"</b></span>
+    <span>ID : <b>(${onlineItems[i].client_id})</b></span>
+    <button class="play-btn" id="${onlineItems[i].is_me?"":"hidden_button"}" onclick="request('${onlineItems[i].ip}')">Play</button>
+    </div>
+    `;
+  }
+
+}
 
 function cardShow(players) {
   const playersContainer = document.querySelector('.players-list');
@@ -223,46 +250,40 @@ function cardShow(players) {
   playersContainer.innerHTML = "";
 
   const data = (typeof players === 'string') ? JSON.parse(players) : players;
-  while(onlineNames.length > 0) {
-    onlineNames.pop();
+  while(onlineItems.length > 0) {
+    onlineItems.pop();
   }
   data.forEach(player => {
     if(player.ip == player_ip){
+      add_item(player.name, player.user_id, player.client_id, player.ip, player.score, 1);
       console.log(player_ip);
     }
     else{
       if(player.name){
-        const item = [];
-        item.push((player.name).toString());
-        item.push((player.user_id).toString());
-        onlineNames.push(item);
-        playersContainer.innerHTML += `
+        add_item(player.name, player.user_id, player.client_id, player.ip, player.score, 0);
+/*        playersContainer.innerHTML += `
         <div class="player-item" data-id="${player.user_id}">
         <span>Name : <b>"${player.name}"</b></span>
         <span>ID : <b>(${player.client_id})</b></span>
         <button class="play-btn" onclick="request('${player.ip}')">Play</button>
         </div>
         `;
-        console.log(item.toString());
-      }
+*/    }
       else{
-        const item = [];
-        item.push("Player " + (player.user_id).toString());
-        item.push((player.user_id).toString());
-        onlineNames.push(item);
-        playersContainer.innerHTML += `
+        add_item(player.name, player.user_id, player.client_id, player.ip, player.score, 0);
+/*        playersContainer.innerHTML += `
         <div class="player-item" data-id="${player.user_id}">
         <span>Name : <b>"Player ${player.user_id}"</b></span>
         <span>ID : <b>(${player.client_id})</b></span>
         <button class="play-btn" onclick="request('${player.ip}')">Play</button>
         </div>
         `;
-        console.log(item.toString());
-      }
-      console.log(onlineNames.toString());
+*/    }
+      console.log(onlineItems.toString());
+        showCard();
     }
   });
-  console.log(onlineNames.toString());
+  console.log(onlineItems.toString());
 }
 
 
