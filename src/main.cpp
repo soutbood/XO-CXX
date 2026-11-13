@@ -89,6 +89,7 @@ public:
   void print_board();
   void input_user();
   char is_winning();
+  char winning();
   void print_received();
   void game_init(JsonDocument doc, int player_id, int oppenent_id);
   void game_init(JsonDocument doc);
@@ -537,8 +538,29 @@ void Game::input_user() {
     }
   }
 }
+char Game::is_winning(){
+  char result = winning();
+  switch(result){
+    case 'C' : return result; break;
+    case 'D' :
+        player.p_score +=1;
+        oppenent.p_score +=1;
+      break;
+    case 'X' :
+        player.p_score +=3;
+        oppenent.p_score -=1;
+      break;
+    case 'O' :
+        player.p_score -=1;
+        oppenent.p_score +=3;
+      break;
+    default  : return result; break;
+  }
+  
+  return result;
 
-char Game::is_winning() {
+}
+char Game::winning() {
   if (board[0] == board[1] and board[1] == board[2] and board[0] != '-') {
     move = 9;
     return board[0];
