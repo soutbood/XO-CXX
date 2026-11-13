@@ -555,26 +555,26 @@ void Game::is_winning(char win){
         Serial.println("Tie");
         g_player.print_p_debuging();
         g_oppenent.print_p_debuging();
-        ip[g_player.p_client_id].p_transfer(g_player);
-        ip[g_oppenent.p_client_id].p_transfer(g_oppenent);
+        ip[g_player.p_stack_id].p_transfer(g_player);
+        ip[g_oppenent.p_stack_id].p_transfer(g_oppenent);
       break;
     case 'X' :
         g_player.p_score +=3;
-        g_oppenent.p_score -=1;
+        g_oppenent.p_score -=2;
         Serial.println("X won");
         g_player.print_p_debuging();
         g_oppenent.print_p_debuging();
-        ip[g_player.p_client_id].p_transfer(g_player);
-        ip[g_oppenent.p_client_id].p_transfer(g_oppenent);
+        ip[g_player.p_stack_id].p_transfer(g_player);
+        ip[g_oppenent.p_stack_id].p_transfer(g_oppenent);
       break;
     case 'O' :
-        g_player.p_score -=1;
+        g_player.p_score -=2;
         g_oppenent.p_score +=3;
         Serial.println("O won");
         g_player.print_p_debuging();
         g_oppenent.print_p_debuging();
-        ip[g_player.p_client_id].p_transfer(g_player);
-        ip[g_oppenent.p_client_id].p_transfer(g_oppenent);
+        ip[g_player.p_stack_id].p_transfer(g_player);
+        ip[g_oppenent.p_stack_id].p_transfer(g_oppenent);
       break;
     default  : break;
   }
@@ -760,7 +760,7 @@ void Player::p_transfer(Player g_ip){
   p_state     = g_ip.is_alive();
   p_ip        = g_ip.get_p_ip();
   p_name      = g_ip.get_p_name();
-  p_client_id = g_ip.get_p_client_id(); // location in the ip
+  p_client_id = g_ip.get_p_client_id(); 
   p_game_id   = g_ip.get_p_game_id();
   p_limit     = 0;
   p_stack_id  = g_ip.get_p_stack_id(); 
