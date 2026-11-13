@@ -50,11 +50,13 @@ public:
   void set_p_limit(int limit);
   void set_p_name(String name);
   bool is_alive();
+  void p_transfer(Player g_ip);
   void p_transfer(int client_id);
   int get_p_client_id();
   int get_p_stack_id();
   int get_p_game_id();
   int get_p_limit();
+  int get_p_score();
   String get_p_ip();
   String get_p_name();
 };
@@ -88,7 +90,7 @@ public:
   void print_debug();
   void print_board();
   void input_user();
-  char is_winning();
+  void is_winning(char win);
   char winning();
   void print_received();
   void game_init(JsonDocument doc, int player_id, int oppenent_id);
@@ -411,7 +413,7 @@ void wsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
           object["cell"] = game[a].get_cell();
           object["play"] = game[a].get_play();
           object["turn"] = game[a].get_turn();
-          object["won"] = String(game[a].is_winning());
+          object["won"] = String(game[a].winning());
           if (game[a].get_play() == 0)
             object["cell"] = 0;                            // write data into the JSON object -> I used "rand1" and "rand2" here, but you can use anything else
           object["not_list"] = 1;
@@ -421,10 +423,12 @@ void wsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
           Serial.println("sent to player");
           server->text(game[a].get_oppenent_client_id(), jsonString);
           Serial.println("sent to oppenent");
-          if (game[a].is_winning() == 'X'
-            or game[a].is_winning() == 'O'
-            or game[a].is_winning() == 'D')
-            game[a] = Game();
+          char win = game[a].winning();
+          if (win == 'X' or win == 'O' or win == 'D'){
+              game[a].is_winning(win);
+              current_alive(server);
+              game[a] = Game();
+            }
             
         }
 
@@ -541,32 +545,40 @@ void Game::input_user() {
     }
   }
 }
-char Game::is_winning(){
-  char result = winning();
-  switch(result){
-    case 'C' : return result; break;
+
+void Game::is_winning(char win){
+  switch(win){
+    case 'C' :break;
     case 'D' :
         g_player.p_score +=1;
         g_oppenent.p_score +=1;
-        ip[g_player.p_client_id].p_transfer(g_player.p_client_id);
-        ip[g_oppenent.p_client_id].p_transfer(g_oppenent.p_client_id);
+        Serial.println("Tie");
+        g_player.print_p_debuging();
+        g_oppenent.print_p_debuging();
+        ip[g_player.p_client_id].p_transfer(g_player);
+        ip[g_oppenent.p_client_id].p_transfer(g_oppenent);
       break;
     case 'X' :
         g_player.p_score +=3;
         g_oppenent.p_score -=1;
-        ip[g_player.p_client_id].p_transfer(g_player.p_client_id);
-        ip[g_oppenent.p_client_id].p_transfer(g_oppenent.p_client_id);
+        Serial.println("X won");
+        g_player.print_p_debuging();
+        g_oppenent.print_p_debuging();
+        ip[g_player.p_client_id].p_transfer(g_player);
+        ip[g_oppenent.p_client_id].p_transfer(g_oppenent);
       break;
     case 'O' :
         g_player.p_score -=1;
         g_oppenent.p_score +=3;
-        ip[g_player.p_client_id].p_transfer(g_player.p_client_id);
-        ip[g_oppenent.p_client_id].p_transfer(g_oppenent.p_client_id);
+        Serial.println("O won");
+        g_player.print_p_debuging();
+        g_oppenent.print_p_debuging();
+        ip[g_player.p_client_id].p_transfer(g_player);
+        ip[g_oppenent.p_client_id].p_transfer(g_oppenent);
       break;
-    default  : return result; break;
+    default  : break;
   }
   
-  return result;
 
 }
 char Game::winning() {
@@ -693,6 +705,10 @@ int Player::get_p_stack_id(){
   return p_stack_id;
 }
 
+int Player::get_p_score(){
+  return p_score;
+}
+
 bool Player::is_alive(){
   if(p_ip == "" || p_ip == "0.0.0.0")
     return false;
@@ -728,8 +744,7 @@ void Player::set_p_limit(int limit) {
 }
 
 void Player::print_p_debuging(){
-  Serial.println();
-  Serial.println("ID: " + String(p_client_id) + " game ID: " + String(p_game_id) + " Name: " + p_name + " Ip: " + p_ip + " limit: " + String(p_limit));
+  Serial.println("ID: " + String(p_client_id) + " game ID: " + String(p_game_id) + " Name: " + p_name + " Ip: " + p_ip + " limit: " + String(p_limit) + " Score: " + String(p_score));
 }
 
 void Player::to_json(JsonVariant doc){
@@ -740,12 +755,28 @@ void Player::to_json(JsonVariant doc){
   doc["score"] = p_score;
 }
 
+void Player::p_transfer(Player g_ip){
+  Serial.println("Transferring:");
+  p_state     = g_ip.is_alive();
+  p_ip        = g_ip.get_p_ip();
+  p_name      = g_ip.get_p_name();
+  p_client_id = g_ip.get_p_client_id(); // location in the ip
+  p_game_id   = g_ip.get_p_game_id();
+  p_limit     = 0;
+  p_stack_id  = g_ip.get_p_stack_id(); 
+  p_score     = g_ip.get_p_score();
+  Serial.println("g_ip");
+  g_ip.print_p_debuging();
+  Serial.println("converted");
+  print_p_debuging();
+}
 void Player::p_transfer(int client_id){
   p_state = ip[client_id].is_alive();
   p_ip = ip[client_id].get_p_ip();
   p_name = ip[client_id].get_p_name();
   p_client_id = ip[client_id].get_p_client_id(); // location in the ip[client_id]
   p_game_id = ip[client_id].get_p_game_id();
+  p_score = ip[client_id].get_p_score();
   p_limit = 0;
   p_stack_id = ip[client_id].get_p_stack_id(); 
 }

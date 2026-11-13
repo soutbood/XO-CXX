@@ -231,7 +231,7 @@ function showCard(){
   for(let i = 0 ; i < onlineItems.length ; i++){
     playersContainer.innerHTML += `
     <div class="player-item" data-id="${onlineItems[i].id}">
-    <span>Name : <b>${onlineItems[i].name?"Player "+onlineItems[i].user_id:onlineItems[i].name}</b></span>
+    <span>Name : <b>${onlineItems[i].name?onlineItems[i].name:"Player "+onlineItems[i].user_id}</b></span>
     <span>ID : <b>(${onlineItems[i].client_id})</b></span>
     <button class="play-btn" id="${onlineItems[i].is_me?"hidden_button":""}" onclick="request('${onlineItems[i].ip}')">Play</button>
     </div>
