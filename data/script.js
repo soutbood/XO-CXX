@@ -233,7 +233,7 @@ function showCard(){
     <div class="player-item" data-id="${onlineItems[i].id}">
     <span>Name : <b>${onlineItems[i].name?onlineItems[i].name:"Player "+onlineItems[i].user_id}</b></span>
     <span>ID : <b>(${onlineItems[i].client_id})</b></span>
-    <button class="play-btn" id="${onlineItems[i].is_me?"hidden_button":""}" onclick="request('${onlineItems[i].ip}')">Play</button>
+    <button class="play-btn ${onlineItems[i].is_me?"untouchable":""}" onclick="request('${onlineItems[i].ip}')">Play</button>
     </div>
     `;
   }
