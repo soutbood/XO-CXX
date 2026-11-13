@@ -215,7 +215,6 @@ window.onload = function(event){
 const onlineItems = [];
 
 function add_item(name, user_id, client_id, ip, score, me){
-  for(let i = 0; i < 10 ; i++){
   onlineItems[i] = {
     id : user_id,
     name : name,
@@ -224,7 +223,6 @@ function add_item(name, user_id, client_id, ip, score, me){
     score : score,
     is_me : me
     };
-  }
   onlineItems.sort((a,b)=> b.score-a.score);
 }
 
