@@ -485,6 +485,9 @@ void setup() {
   server.on("/back.jpg", HTTP_GET, [](AsyncWebServerRequest *request) {
     request->send(LittleFS, "/back.jpg", "image/jpg");
   });
+  server.on("/animation.gif", HTTP_GET, [](AsyncWebServerRequest *request) {
+    request->send(LittleFS, "/animation.gif", "image/gif");
+  });
 
   ws.onEvent(wsEvent);
   server.addHandler(&ws);
@@ -543,22 +546,22 @@ char Game::is_winning(){
   switch(result){
     case 'C' : return result; break;
     case 'D' :
-        player.p_score +=1;
-        oppenent.p_score +=1;
-        ip[player.p_client_id] = p_transfer(player.p_client_id);
-        ip[oppenent.p_client_id] = p_transfer(oppenent.p_client_id);
+        g_player.p_score +=1;
+        g_oppenent.p_score +=1;
+        ip[g_player.p_client_id].p_transfer(g_player.p_client_id);
+        ip[g_oppenent.p_client_id].p_transfer(g_oppenent.p_client_id);
       break;
     case 'X' :
-        player.p_score +=3;
-        oppenent.p_score -=1;
-        ip[player.p_client_id] = p_transfer(player.p_client_id);
-        ip[oppenent.p_client_id] = p_transfer(oppenent.p_client_id);
+        g_player.p_score +=3;
+        g_oppenent.p_score -=1;
+        ip[g_player.p_client_id].p_transfer(g_player.p_client_id);
+        ip[g_oppenent.p_client_id].p_transfer(g_oppenent.p_client_id);
       break;
     case 'O' :
-        player.p_score -=1;
-        oppenent.p_score +=3;
-        ip[player.p_client_id] = p_transfer(player.p_client_id);
-        ip[oppenent.p_client_id] = p_transfer(oppenent.p_client_id);
+        g_player.p_score -=1;
+        g_oppenent.p_score +=3;
+        ip[g_player.p_client_id].p_transfer(g_player.p_client_id);
+        ip[g_oppenent.p_client_id].p_transfer(g_oppenent.p_client_id);
       break;
     default  : return result; break;
   }
