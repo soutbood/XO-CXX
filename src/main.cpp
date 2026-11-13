@@ -545,14 +545,20 @@ char Game::is_winning(){
     case 'D' :
         player.p_score +=1;
         oppenent.p_score +=1;
+        ip[player.p_client_id] = p_transfer(player.p_client_id);
+        ip[oppenent.p_client_id] = p_transfer(oppenent.p_client_id);
       break;
     case 'X' :
         player.p_score +=3;
         oppenent.p_score -=1;
+        ip[player.p_client_id] = p_transfer(player.p_client_id);
+        ip[oppenent.p_client_id] = p_transfer(oppenent.p_client_id);
       break;
     case 'O' :
         player.p_score -=1;
         oppenent.p_score +=3;
+        ip[player.p_client_id] = p_transfer(player.p_client_id);
+        ip[oppenent.p_client_id] = p_transfer(oppenent.p_client_id);
       break;
     default  : return result; break;
   }
@@ -735,7 +741,7 @@ void Player::p_transfer(int client_id){
   p_state = ip[client_id].is_alive();
   p_ip = ip[client_id].get_p_ip();
   p_name = ip[client_id].get_p_name();
-  p_client_id = ip[client_id].get_p_client_id();
+  p_client_id = ip[client_id].get_p_client_id(); // location in the ip[client_id]
   p_game_id = ip[client_id].get_p_game_id();
   p_limit = 0;
   p_stack_id = ip[client_id].get_p_stack_id(); 
