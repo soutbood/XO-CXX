@@ -231,8 +231,8 @@ function add_item(name, user_id, client_id, ip, score, me){
 function showCard(){
   for(let i = 0 ; i < onlineItems.length ; i++){
     playersContainer.innerHTML += `
-    <div class="player-item" data-id="${onlineItems[i].user_id}">
-    <span>Name : <b>"Player ${onlineItems[i].user_id}"</b></span>
+    <div class="player-item" data-id="${onlineItems[i].id}">
+    <span>Name : <b>"Player ${onlineItems[i].id}"</b></span>
     <span>ID : <b>(${onlineItems[i].client_id})</b></span>
     <button class="play-btn" id="${onlineItems[i].is_me?"":"hidden_button"}" onclick="request('${onlineItems[i].ip}')">Play</button>
     </div>
