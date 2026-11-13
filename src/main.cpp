@@ -57,7 +57,6 @@ public:
   int get_p_limit();
   String get_p_ip();
   String get_p_name();
-  void p_reset();
 };
 
 class Game {
@@ -710,15 +709,6 @@ void Player::to_json(JsonVariant doc){
   doc["score"] = p_score;
 }
 
-void Player::p_reset(){
-  p_state = false;
-  p_ip = "";
-  p_name = "";
-  p_client_id = -1;
-  p_game_id = -1;
-  p_limit = 0;
-  p_stack_id = -1;
-}
 void Player::p_transfer(int client_id){
   p_state = ip[client_id].is_alive();
   p_ip = ip[client_id].get_p_ip();
