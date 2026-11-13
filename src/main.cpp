@@ -26,16 +26,18 @@ public:
   int p_game_id;;       // game id currently in
   int p_limit;
   int p_stack_id;
+  int p_score;
   String p_name;
   String p_ip;
   Player() {
-    p_state = false;
-    p_ip = "";
-    p_name = "";
+    p_state     = false;
+    p_ip        = "";
+    p_name      = "";
     p_client_id = -1;
-    p_game_id = -1;
-    p_limit = 0;
-    p_stack_id = -1;
+    p_game_id   = -1;
+    p_stack_id  = -1;
+    p_limit     = 0;
+    p_score     = 0;
   }
   ~Player(){}
   void set_p_state(bool state);
@@ -62,11 +64,11 @@ class Game {
 public:
   bool current_player;
   int move;
-  int g_color;        // 1 is X ,2 is O
+  int g_turn;        // 1 is X ,2 is O
   int g_cell;         // from 1 to 9 when used do g_cell-1
   int g_play;
-  char board[9];
   int g_game_id;
+  char board[9];
 
   Player g_player;    // g_player is the one who send the request
   Player g_oppenent;  // g_oppenent is the oppenent
@@ -78,7 +80,7 @@ public:
     current_player = true;
     g_oppenent = Player();
     g_player = Player();
-    g_color = -1;
+    g_turn = -1;
     g_cell = -1;
     g_play = 1;
     g_game_id = -1;
@@ -86,25 +88,17 @@ public:
   ~Game(){}
   void print_debug();
   void print_board();
-  void change_turn();
   void input_user();
   char is_winning();
   void print_received();
   void game_init(JsonDocument doc, int player_id, int oppenent_id);
   void game_init(JsonDocument doc);
-  void game_loop();
-  void set_play(int x);
-  void set_cell(int x);
-  void set_color(int id);
-  void set_player(int id);
-  void set_oppenent(int id);
   void set_game_id(int game_id);
   int get_play();
   int get_cell();
   int get_oppenent_client_id(); 
   int get_player_client_id();
-  int get_color();
-  int get_move();
+  int get_turn();
   String get_oppenent_ip();
   String get_player_ip();
 
@@ -416,7 +410,7 @@ void wsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
           game[a].print_board();
           object["cell"] = game[a].get_cell();
           object["play"] = game[a].get_play();
-          object["turn"] = game[a].get_color();
+          object["turn"] = game[a].get_turn();
           object["won"] = String(game[a].is_winning());
           if (game[a].get_play() == 0)
             object["cell"] = 0;                            // write data into the JSON object -> I used "rand1" and "rand2" here, but you can use anything else
@@ -532,23 +526,17 @@ void Game::print_board() {
 void Game::input_user() {
   if (board[g_cell - 1] == '-') {
     if (current_player) {
-      if (g_color % 2 == 0) {
+      if (g_turn % 2 == 0) {
         board[g_cell - 1] = 'O';
         move++;
-        // set_play(1);
       } else {
-        if (g_color % 2 == 1) {
+        if (g_turn % 2 == 1) {
           board[g_cell - 1] = 'X';
           move++;
-          // set_play(1);
         }
       }
     }
   }
-}
-
-void Game::change_turn() {
-  current_player = !current_player;
 }
 
 char Game::is_winning() {
@@ -592,18 +580,18 @@ char Game::is_winning() {
 void Game::game_init(JsonDocument doc, int player_id, int oppenent_id) {
   g_oppenent.p_transfer(oppenent_id);
   g_player.p_transfer(player_id);
-  g_color    = doc["turn"];
+  g_turn    = doc["turn"];
   g_cell     = doc["cell"];
 }
 
 void Game::game_init(JsonDocument doc) {
-  g_color    = doc["turn"];
+  g_turn    = doc["turn"];
   g_cell     = doc["cell"];
 }
 
 void Game::print_received() {
   print_debug();
-  Serial.println("Color: " + String(g_color));
+  Serial.println("Turn: " + String(g_turn));
   Serial.println("Cell: " + String(g_cell));
 }
 
@@ -623,8 +611,8 @@ int Game::get_player_client_id() {
   return g_player.p_client_id;
 }
 
-int Game::get_color() {
-  return g_color;
+int Game::get_turn() {
+  return g_turn;
 }
 
 String Game::get_oppenent_ip(){
@@ -635,29 +623,6 @@ String Game::get_player_ip(){
   return g_player.p_ip;
 }
 
-void Game::set_color(int id) {
-  g_color = id;
-}
-
-void Game::set_cell(int x) {
-  g_cell = x;
-}
-
-void Game::set_play(int x) {
-  g_play = x;
-}
-
-void Game::set_player(int id) {
-  g_player.p_client_id = id;
-  g_player.p_ip = ip[id].get_p_ip();
-  g_player.p_game_id = g_game_id;
-}
-
-void Game::set_oppenent(int id) {
-  g_oppenent.p_client_id = id;
-  g_oppenent.p_ip = ip[id].get_p_ip();
-  g_oppenent.p_game_id = g_game_id;
-}
 
 void Game::set_game_id(int game_id){
   g_oppenent.p_game_id = game_id;
@@ -673,26 +638,6 @@ void Game::print_debug(){
 
 }
 
-void Game::game_loop() {
-  print_board();
-  if (move < 9) {
-    if (is_winning() == 'd')
-      Serial.print("The game ended in a draw");
-    else if (is_winning() != 'c')
-      Serial.print("The winner is " + is_winning());
-    print_board();
-  } else {
-    input_user();
-    change_turn();
-    print_board();
-    Serial.print("The winner is " + is_winning());
-  }
-}
-
-
-int Game::get_move() {
-  return move;
-}
 
 String Player::get_p_ip() {
   return p_ip;
@@ -762,6 +707,7 @@ void Player::to_json(JsonVariant doc){
   doc["user_id"] = p_stack_id;
   doc["client_id"] = p_client_id;
   doc["ip"] = p_ip; 
+  doc["score"] = p_score;
 }
 
 void Player::p_reset(){
