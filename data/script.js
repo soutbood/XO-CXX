@@ -215,22 +215,23 @@ window.onload = function(event){
 const onlineItems = [];
 
 function add_item(name, user_id, client_id, ip, score, me){
-  onlineItems[i] = {
+  onlineItems.push({
     id : user_id,
     name : name,
     client_id : client_id,
     ip : ip,
     score : score,
     is_me : me
-    };
+    });
   onlineItems.sort((a,b)=> b.score-a.score);
 }
 
 function showCard(){
+  playersContainer.innerHTML = "";
   for(let i = 0 ; i < onlineItems.length ; i++){
     playersContainer.innerHTML += `
     <div class="player-item" data-id="${onlineItems[i].id}">
-    <span>Name : <b>"Player ${onlineItems[i].id}"</b></span>
+    <span>Name : <b>${onlineItems[i].name?"Player "+onlineItems[i].user_id:onlineItems[i].name}</b></span>
     <span>ID : <b>(${onlineItems[i].client_id})</b></span>
     <button class="play-btn" id="${onlineItems[i].is_me?"hidden_button":""}" onclick="request('${onlineItems[i].ip}')">Play</button>
     </div>
@@ -255,33 +256,26 @@ function cardShow(players) {
     if(player.ip == player_ip){
       add_item(player.name, player.user_id, player.client_id, player.ip, player.score, 1);
       console.log(player_ip);
+      console.log(onlineItems);
     }
     else{
       if(player.name){
         add_item(player.name, player.user_id, player.client_id, player.ip, player.score, 0);
-/*        playersContainer.innerHTML += `
-        <div class="player-item" data-id="${player.user_id}">
-        <span>Name : <b>"${player.name}"</b></span>
-        <span>ID : <b>(${player.client_id})</b></span>
-        <button class="play-btn" onclick="request('${player.ip}')">Play</button>
-        </div>
-        `;
-*/    }
+      console.log(onlineItems);
+    }
       else{
         add_item(player.name, player.user_id, player.client_id, player.ip, player.score, 0);
-/*        playersContainer.innerHTML += `
-        <div class="player-item" data-id="${player.user_id}">
-        <span>Name : <b>"Player ${player.user_id}"</b></span>
-        <span>ID : <b>(${player.client_id})</b></span>
-        <button class="play-btn" onclick="request('${player.ip}')">Play</button>
-        </div>
-        `;
-*/    }
-      console.log(onlineItems.toString());
-        showCard();
+      console.log(onlineItems);
     }
+      console.log("inside");
+      console.log(onlineItems.length);
+      console.log("inside");
+    }
+      showCard();
   });
-  console.log(onlineItems.toString());
+  console.log("outside");
+  console.log(onlineItems.length);
+  console.log("outside");
 }
 
 
